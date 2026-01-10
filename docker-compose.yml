@@ -1,0 +1,49 @@
+services:
+  gateway:
+    # 🔒 Use prebuilt image (recommended for server)
+    # image: audio_transcript_app-gateway
+    build: ./backend   # ← uncomment if you want to rebuild locally in future
+
+    container_name: audio-gateway-backend
+    ports:
+      - "8017:8017"
+    volumes:
+      - "./backend/data:/app/data"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - mongodb
+
+
+  frontend:
+    # 🔒 Use prebuilt image
+    # image: audio_transcript_app-frontend
+    build: ./frontend  # ← uncomment only when rebuilding frontend locally
+
+    container_name: audio-gateway-frontend
+    ports:
+      - "4000:80"
+    depends_on:
+      - gateway
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: audio-gateway-redis
+    ports:
+      - "6379:6379"
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: audio-gateway-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      -  /storage/data/audio_DB
+
+
+volumes:
+  mongo_data:
+
