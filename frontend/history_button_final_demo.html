@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Button Final Animation Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fd;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .explanation {
+            background: #eef1ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .upload-panel {
+            width: 350px;
+            padding: 20px;
+            background: #f7f9fc;
+            border: 1px solid #e6eaf2;
+            border-radius: 10px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-wrapper {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .animated-section {
+            transition: transform 0.5s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .animated-section.slide-up {
+            transform: translateY(-100vh);
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            border: 1px solid #e6eaf2;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+
+        .history-toggle-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(107, 124, 255, 0.25);
+            transition: all 0.25s ease;
+            margin-top: 20px;
+        }
+
+        .history-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+        }
+
+        .history-section {
+            transition: max-height 0.5s ease-in-out;
+            margin-top: 20px;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .history-section.expanded {
+            max-height: 300px;
+            overflow: visible;
+        }
+
+        .history-content {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            border: 1px solid #e6eaf2;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        }
+
+        .feature-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>History Button Final Animation</h1>
+        
+        <div class="explanation">
+            <p>This demo shows the final history button animation working exactly as you requested:</p>
+            <ol>
+                <li>Initially, the "Audio Gateway UI" header, upload card, and history button are all visible</li>
+                <li>When "Show History" is clicked:
+                    <ul>
+                        <li>Both the upload card and history button slide UP together</li>
+                        <li>They completely disappear from view (move -100vh)</li>
+                        <li>The "Audio Gateway UI" header remains visible at the top</li>
+                        <li>The "Hide History" button appears right below the header</li>
+                        <li>The history panel expands below the button</li>
+                    </ul>
+                </li>
+                <li>When "Hide History" is clicked:
+                    <ul>
+                        <li>The history panel collapses</li>
+                        <li>The upload card and history button slide back DOWN</li>
+                        <li>Everything returns to its original position</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="upload-panel">
+            <h2 class="header">Audio Gateway UI</h2>
+            <div class="content-wrapper">
+                <div class="animated-section" id="animatedSection">
+                    <div class="card">
+                        <h3>Upload Form</h3>
+                        <p>This is the upload form/card.</p>
+                        <p>Features:</p>
+                        <ul>
+                            <li>File selection</li>
+                            <li>Audio recording</li>
+                            <li>Transcribe/Diarize buttons</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="history-toggle-btn" id="historyButton" onclick="toggleHistory()">
+                        Show History
+                    </button>
+                </div>
+                
+                <div class="history-section" id="historySection">
+                    <div class="history-content">
+                        <h3>History Panel</h3>
+                        <p>This is the history panel that appears when the button is clicked.</p>
+                        <p>Features:</p>
+                        <ul>
+                            <li>Transcription history</li>
+                            <li>File information</li>
+                            <li>Date and duration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>How It Works</h3>
+        <div class="code-block">
+/* CSS for animations */<br>
+.content-wrapper {<br>
+&nbsp;&nbsp;position: relative;<br>
+&nbsp;&nbsp;height: 400px;<br>
+&nbsp;&nbsp;overflow: hidden; /* Clips content that goes outside */<br>
+}<br><br>
+.animated-section {<br>
+&nbsp;&nbsp;transition: transform 0.5s ease-in-out;<br>
+&nbsp;&nbsp;margin-top: 20px;<br>
+}<br><br>
+.animated-section.slide-up {<br>
+&nbsp;&nbsp;transform: translateY(-100vh); /* Completely off-screen */<br>
+}<br><br>
+.history-section {<br>
+&nbsp;&nbsp;transition: max-height 0.5s ease-in-out;<br>
+&nbsp;&nbsp;max-height: 0;<br>
+&nbsp;&nbsp;overflow: hidden;<br>
+}<br><br>
+.history-section.expanded {<br>
+&nbsp;&nbsp;max-height: 1000px;<br>
+&nbsp;&nbsp;overflow: visible;<br>
+}
+        </div>
+    </div>
+
+    <script>
+        let showHistory = false;
+        
+        function toggleHistory() {
+            const animatedSection = document.getElementById('animatedSection');
+            const historySection = document.getElementById('historySection');
+            const button = document.getElementById('historyButton');
+            
+            showHistory = !showHistory;
+            
+            if (showHistory) {
+                // Slide both upload card and button up
+                animatedSection.classList.add('slide-up');
+                // Expand history section
+                historySection.classList.add('expanded');
+                button.textContent = 'Hide History';
+            } else {
+                // Slide both upload card and button back down
+                animatedSection.classList.remove('slide-up');
+                // Collapse history section
+                historySection.classList.remove('expanded');
+                button.textContent = 'Show History';
+            }
+        }
+    </script>
+</body>
+</html>

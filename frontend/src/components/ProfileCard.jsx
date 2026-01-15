@@ -6,6 +6,7 @@ export default function ProfileCard() {
   const [profile, setProfile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const ref = useRef(null);
 
@@ -46,26 +47,38 @@ export default function ProfileCard() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleLogout = async () => {
-    console.log("FRONTEND LOG: Logout initiated from ProfileCard", {
-      username: profile?.username,
-      timestamp: new Date().toISOString()
-    });
-    
-    try {
-      await logoutUser();
-      console.log("FRONTEND LOG: Logout successful", {
+  
+    const handleLogout = async () => {
+      console.log("FRONTEND LOG: Logout initiated from ProfileCard", {
+        username: profile?.username,
         timestamp: new Date().toISOString()
       });
-      navigate("/login");
-    } catch (error) {
-      console.error("FRONTEND LOG: Logout failed", {
-        error: error.message,
-        timestamp: new Date().toISOString()
-      });
-    }
-  };
-
+      
+      try {
+        await logoutUser();
+        console.log("FRONTEND LOG: Logout successful", {
+          timestamp: new Date().toISOString()
+        });
+        navigate("/login");
+      } catch (error) {
+        console.error("FRONTEND LOG: Logout failed", {
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    };
+  
+    const handleCopyApiKey = async () => {
+      if (profile?.api_key) {
+        try {
+          await navigator.clipboard.writeText(profile.api_key);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
+        } catch (err) {
+          console.error("Failed to copy API key:", err);
+        }
+      }
+    };
   if (!profile) return null;
 
   return (
@@ -120,37 +133,59 @@ export default function ProfileCard() {
 
       {/* PROFILE CARD */}
       {showProfile && (
-        <div className="profile-card card">
-          <h3>Profile</h3>
-          <p><strong>Username:</strong> {profile.username}</p>
-          <p><strong>Email:</strong> {profile.email}</p>
-          <p><strong>Upload Limit:</strong> {profile.upload_limit}</p>
-          <div className="api-key-container">
-            <p><strong>API Key:</strong></p>
-            {profile.api_key ? (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <code className="api-key-display">{profile.api_key}</code>
-                <button
-                  className="copy-api-key-btn"
-                  onClick={() => navigator.clipboard.writeText(profile.api_key)}
-                  title="Copy API key to clipboard"
-                  style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer' }}
-                >
-                  📋
-                </button>
-              </div>
-            ) : (
-              <p><em>API key not available</em></p>
-            )}
+        <div className="profile-card">
+          <div className="profile-header">
+            <h3>Profile</h3>
+            <span className={`status-badge ${profile.api_key_active ? 'active' : 'inactive'}`}>
+              {profile.api_key_active ? 'Active' : 'Inactive'}
+            </span>
           </div>
-          <p>
-            <strong>API Key Status:</strong>{" "}
-            {profile.api_key_active ? "Active" : "Inactive"}
-          </p>
+
+          <div className="profile-section">
+            <div className="profile-row">
+              <span className="label">Username</span>
+              <span className="value">{profile.username}</span>
+            </div>
+
+            <div className="profile-row">
+              <span className="label">Email</span>
+              <span className="value">{profile.email}</span>
+            </div>
+
+            <div className="profile-row">
+              <span className="label">Upload Limit</span>
+              <span className="value">{profile.upload_limit} files</span>
+            </div>
+          </div>
+
+          <div className="profile-divider"></div>
+
+          <div className="profile-section">
+            <span className="label">API Key</span>
+            <div className="api-key-box">
+              <span className="api-key-text">{profile.api_key || 'No API key available'}</span>
+              {profile.api_key && (
+                <button className="copy-api-key-btn" onClick={handleCopyApiKey}>
+                  {copied ? '✓ Copied!' : 'Copy'}
+                </button>
+              )}
+            </div>
+
+            <div className="api-status">
+              <span className="label">API Key Status</span>
+              <span className={`status-pill ${profile.api_key_active ? 'active' : 'inactive'}`}>
+                {profile.api_key_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+          </div>
 
           <button
-            className="profile-menu-btn"
+            className="action-btn"
             onClick={() => setShowProfile(false)}
+            style={{
+              marginTop: '14px',
+              width: '100%'
+            }}
           >
             Close
           </button>

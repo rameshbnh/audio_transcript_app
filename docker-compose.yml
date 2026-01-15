@@ -27,13 +27,11 @@ services:
     depends_on:
       - gateway
 
-
   redis:
     image: redis:7-alpine
     container_name: audio-gateway-redis
     ports:
       - "6379:6379"
-
 
   mongodb:
     image: mongo:latest
@@ -41,8 +39,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      -  /storage/data/audio_DB
-
+      - /storage/data/audio_DB:/data/db
 
 volumes:
   mongo_data:

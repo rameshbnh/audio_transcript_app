@@ -66,3 +66,45 @@ export async function uploadAudio(file, mode) {
     throw error;
   }
 }
+
+export async function fetchHistory() {
+  try {
+    const response = await fetch(`${API_BASE}/history`, {
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch history: ${response.status} ${response.statusText}`);
+    }
+
+    const history = await response.json();
+    return history;
+  } catch (error) {
+    console.error("FRONTEND LOG: Error fetching history", {
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+    throw error;
+  }
+}
+
+export async function fetchTranscriptionResult(transcriptionId) {
+  try {
+    const response = await fetch(`${API_BASE}/transcription/${transcriptionId}`, {
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transcription: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("FRONTEND LOG: Error fetching transcription result", {
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+    throw error;
+  }
+}

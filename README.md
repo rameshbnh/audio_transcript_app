@@ -11,6 +11,8 @@ This project implements an AI-powered web application for audio transcription an
 - **Upload Quotas**: User-specific upload limits (e.g., User A: 20 uploads, User B: 4 uploads) enforced via Redis counters, supporting concurrent multi-user operations.
 - **Profile Management**: User-friendly profile UI displaying username, email, generated API key, and logout functionality.
 - **Audit Trail**: Comprehensive logging in structured JSON format persisted in MongoDB, capturing authentication events, API access, usage logs, file uploads, and session details.
+- **History Tracking**: Persistent storage of all transcription/diarization results in MongoDB for later retrieval.
+- **Download Functionality**: Ability to download processed results in JSON and Markdown formats from the history page.
 - **Scalable Architecture**: Built with FastAPI (backend), React (frontend), Redis (session/counter management), and MongoDB (logging).
 - **Cross-Origin Support**: Proper CORS configuration for secure cross-origin communication.
 
@@ -93,6 +95,7 @@ This will start all services:
 3. Upload an audio file and select transcription or diarization mode
 4. View results in the UI
 5. Check your profile for API key and usage stats
+6. Access your history to view past transcriptions and download results
 
 ## API Documentation
 
@@ -107,6 +110,15 @@ This will start all services:
 
 - `POST /upload` - Upload audio file for processing
   - Parameters: `file` (UploadFile), `mode` (transcribe|diarize)
+  - Requires authentication
+
+### History Endpoints
+
+- `GET /history` - Get user's transcription/diarization history
+  - Returns list of processed files with metadata
+  - Requires authentication
+- `GET /transcription/{transcription_id}` - Get specific transcription result
+  - Returns the full transcription/diarization result for the given ID
   - Requires authentication
 
 ### WebSocket
@@ -324,6 +336,17 @@ uvicorn main:app --reload
 - `user_id`: string
 - `files_uploaded`: number
 - `seconds_processed`: number
+
+### Transcriptions Collection
+- `_id`: ObjectId
+- `user_id`: string
+- `username`: string
+- `filename`: string
+- `mode`: string (transcribe|diarize)
+- `result`: object (the transcription/diarization result)
+- `created_at`: timestamp
+- `duration_sec`: number
+- `file_size`: number
 
 ## Security Considerations
 

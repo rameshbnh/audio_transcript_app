@@ -23,3 +23,11 @@ export async function uploadAudio(file, mode) {
 
   return res.data;
 }
+
+export async function fetchHistory() {
+  const res = await axios.get('/history', {
+    withCredentials: true
+  });
+  
+  return res.data;
+}
